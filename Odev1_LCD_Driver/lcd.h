@@ -1,12 +1,4 @@
-/*****************************************************************************
-     SAKARYA ÜNÝVERSÝTESÝ
-        ELEKTRÝK ELEKTRONÝK MÜHENDÝSLÝÐÝ
-          NECATÝ BÝLGÝN
-           B090100043
-       4-BÝT VERÝ YOLLU LCD HEADER FÝLE DOSYASI
-              20.05.2014
-**************************************************************************
-          LCD Pinlerinin Stellaris LaunchPad Pinleri ile Baðlantýsý
+//LCD Pinlerinin Stellaris LaunchPad Pinleri ile BaÄŸlantÄ±sÄ±
       D7 - D6  - D5  - D4
  Veri hatti ==> PB7 - PB6 - PB5 - PB4    MSB:YUKSEK ANLAMLI BIT
      MSB             LSB    LSB:DUSUK ANLAMLI BIT
@@ -43,7 +35,7 @@ void satir_sutun(unsigned char satir, unsigned char sutun);
 char veri(char deger);
 void printf( char* s);
 //===========================================================================
-void baslangic(void)   //LCD baþlangýç ayarlarýný yapar.
+void baslangic(void)   //LCD baÅŸlangÄ±Ã§ ayarlarÄ±nÄ± yapar.
 {
  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
@@ -97,7 +89,7 @@ void satir_sutun(unsigned char satir, unsigned char sutun)
  komut_yaz();
 }
 //===========================================================================
-void LCD_sil(void)   //LCD ekranýný siler.
+void LCD_sil(void)   //LCD ekranÄ±nÄ± siler.
 {
  GPIOPinWrite(GPIO_PORTE_BASE, RS | RW | EN, 0x00);
  SysCtlDelay(sure);
@@ -118,9 +110,9 @@ void printf( char* s)
 //===========================================================================
 char veri(char deger)
 {
- GPIOPinWrite(GPIO_PORTB_BASE, D7 | D6  | D5 | D4, (0xF0 & deger)); //YÜKSEK 4 BÝT
+ GPIOPinWrite(GPIO_PORTB_BASE, D7 | D6  | D5 | D4, (0xF0 & deger)); //YÃœKSEK 4 BÄ°T
  veri_yaz();
- GPIOPinWrite(GPIO_PORTB_BASE, D7 | D6  | D5 | D4, ((deger & 0x0F) << 4));//DÜÞÜK 4 BÝT
+ GPIOPinWrite(GPIO_PORTB_BASE, D7 | D6  | D5 | D4, ((deger & 0x0F) << 4));//DÃœÅžÃœK 4 BÄ°T
   veri_yaz();
  }
  //===========================================================================
@@ -131,3 +123,4 @@ char veri(char deger)
   GPIOPinWrite(GPIO_PORTE_BASE, RS | RW | EN, 0x02);
  }
  #endif
+
