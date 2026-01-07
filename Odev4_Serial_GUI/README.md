@@ -1,66 +1,32 @@
-# Ödev 4 - Seri Port ve GUI Haberleşmesi (UART)
+Ödev 4 - Seri Port ve GUI Haberleşmesi
 
-## Amaç
-Bu ödevde Tiva TM4C123 ile PC arasında UART (seri haberleşme) kuruldu.
-PC tarafında C# (SharpDevelop) ile hazırlanan arayüz üzerinden:
-- Tiva’ya saat bilgisi gönderiliyor,
-- LCD’de gösterilecek 3 karakterlik mesaj gönderiliyor,
-- Tiva’dan her saniye gelen saat/ADC/buton bilgisi ekranda gösteriliyor.
+Bu ödevde Tiva TM4C123 ile bilgisayar arasında UART üzerinden haberleşme yapılmıştır.
+Bilgisayar tarafında SharpDevelop kullanılarak basit bir GUI hazırlanmıştır.
 
-## Donanım / Bağlantı
-- UART0 kullanıldı:
-  - PA0 = U0RX
-  - PA1 = U0TX
-- Baudrate: **9600**, 8N1
+GUI üzerinden:
+- Tiva kartına saat bilgisi gönderilmektedir.
+- LCD’de gösterilecek 3 karakterlik mesaj gönderilmektedir.
+- Tiva’dan her saniye gelen saat, ADC ve buton bilgileri ekranda gösterilmektedir.
 
-Not: USB ile bağlandığında Windows’ta görünen COM port numarası (ör: COM4) GUI’de yazılır.
+Bağlantı:
+UART0 kullanılmıştır (PA0 RX, PA1 TX).
+Baudrate 9600 olarak ayarlanmıştır.
+GUI’de COM port numarası (örnek: COM4) girilerek bağlantı açılır.
 
-## GUI (SharpDevelop) Nasıl Çalışır?
-Arayüzde 3 ana işlem var:
+Butonlar:
+- Start/Stop: Seri port bağlantısını açar ve kapatır.
+- Sync Time: Girilen saati (HH:MM:SS) Tiva’ya gönderir.
+- Update Display: LCD’de gösterilecek 3 karakterlik mesajı gönderir.
 
-### 1) Start/Stop (Bağlantı)
-- `txtPort` içine COM port yazılır (ör: **COM4**).
-- **Start** butonuna basınca port açılır.
-- Tekrar basınca port kapanır (Stop/Start şeklinde).
+Veri Akışı:
+Tiva kartı her 1 saniyede bir PC’ye veri gönderir.
+Gönderilen veri formatı:
 
-### 2) Saat Gönderme (Sync Time)
-- `txtTimeIn` alanına saat **HH:MM:SS** formatında yazılır (ör: 13:25:00).
-- **Sync Time** butonuna basınca PC -> Tiva şu format gönderir:
-  - `S` + `HH:MM:SS`
-  - Örnek: `S13:25:00`
+HH:MM:SS;ADC;BTN
 
-### 3) Mesaj Gönderme (3 karakter)
-- `txtMsgIn` alanına LCD’de görünecek 3 karakter yazılır (ör: `ABC`).
-- **Update Display** butonuna basınca PC -> Tiva şu format gönderir:
-  - `M` + `XXX` (tam 3 karakter)
-  - 3’ten kısa ise boşlukla tamamlanır, uzunsa kesilir.
-  - Örnek: `MMNY`
+Burada:
+- HH:MM:SS anlık saati,
+- ADC okunan analog değeri,
+- BTN ise butona basılıp basılmadığını göstermektedir.
 
-## Tiva -> PC Veri Akışı
-Tiva her **1 saniyede** bir PC’ye rapor yollar.
-Format:
-
-`HH:MM:SS;ADC;BTN`
-
-- `HH:MM:SS` : Güncel saat
-- `ADC`       : ADC ham değeri (0..4095 gibi)
-- `BTN`       : 1 = son 1 saniye içinde butona basıldı, 0 = basılmadı
-
-Örnek satır:
-`13:00:12;4095;1`
-
-GUI tarafında `DataReceived` olayı ile bu satır okunur, `;` ile parçalanır ve
-- `txtTimeOut` -> saat,
-- `txtAdcOut`  -> ADC,
-- `txtStatus`  -> Pressed/Released
-alanlarına yazdırılır.
-
-## Çalıştırma Adımları
-1. Tiva kodunu karta yükle.
-2. Kartı USB ile PC’ye bağla, COM port numarasını öğren (Aygıt Yöneticisi).
-3. GUI’yi çalıştır.
-4. `txtPort` = COMx yaz.
-5. Start ile bağlantıyı aç.
-6. `txtTimeIn` gir -> Sync Time.
-7. `txtMsgIn` gir -> Update Display.
-8. Her saniye gelen veriler GUI’de güncellenecek.
+GUI tarafında gelen veri okunur ve ilgili alanlara yazdırılır.
